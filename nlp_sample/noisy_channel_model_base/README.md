@@ -6,4 +6,8 @@
 pip install nltk spacy ginza
 ```
 
-open a notebook on your browser.
+## run
+
+```shell
+python main.py
+```
