@@ -7,7 +7,7 @@ static NEG_INF: i32 = i32::MIN;
 
 fn get_posting_list() -> HashMap<String, Vec<i32>> {
     let v = vec![NEG_INF, 11, 22, 33, 66, INF];
-    let v2 = vec![NEG_INF, 44, 55, 66, INF];
+    let v2 = vec![NEG_INF, 8, 9, 12, INF];
     let v3 = vec![NEG_INF, 77, 88, 99, INF];
     let mut posting_list = HashMap::new();
     posting_list.insert("first".to_string(), v);
@@ -17,29 +17,58 @@ fn get_posting_list() -> HashMap<String, Vec<i32>> {
     return posting_list;
 }
 
-fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
+fn first(term: String, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
     if posting_list.contains_key(&term) {
         let indices = &posting_list[&term];
-        println!("{}: {}", term, posting_index);
-        let index = indices.binary_search(&posting_index);
-        println!("{}", index.unwrap());
-        if index.unwrap()+1 >= indices.len() {
-            return -1;
-        }
-        return indices[index.unwrap()+1] as i32;
+        return indices[1];
     }
-    return -1;
+    return NEG_INF;
+}
+
+fn last(term: String, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
+    if posting_list.contains_key(&term) {
+        let indices = &posting_list[&term];
+        let length = indices.len();
+        return indices[length-2];
+    }
+    return INF;
+}
+
+fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
+    if posting_index == INF {
+        return INF;
+    }
+    if posting_index == NEG_INF {
+        return first(term, &posting_list);
+    }
+
+    if posting_list.contains_key(&term) {
+        let indices = &posting_list[&term];
+        let index = indices.binary_search(&posting_index).unwrap_or(indices.len()-1);
+        if index+1 >= indices.len() {
+            return INF;
+        }
+        return indices[index+1] as i32;
+    }
+    return INF;
 }
 
 fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
+    if posting_index == NEG_INF {
+        return NEG_INF;
+    }
+    if posting_index == INF {
+        return last(term, &posting_list);
+    }
+
     if posting_list.contains_key(&term) {
         let indices = &posting_list[&term];
-        let index = indices.binary_search(&posting_index).unwrap();
+        let index = indices.binary_search(&posting_index).unwrap_or(1 as usize);
         if index-1 >= 0 as usize {
             return indices[index-1] as i32;
         }
     }
-    return -1;
+    return NEG_INF;
 }
 
 fn next_phrase(terms: Vec<String>, position: i32, posting_list: &HashMap<String, Vec<i32>>) -> (i32, i32) {
@@ -47,13 +76,14 @@ fn next_phrase(terms: Vec<String>, position: i32, posting_list: &HashMap<String,
     for i in 0..terms.len() {
         let tv = &terms[i];
         v = next(tv.to_string(), v, &posting_list);
+        println!("{}: {}", tv, v);
     }
     if v == INF {
         return (INF, INF);
     }
 
     let mut u = v;
-    for i in (0..terms.len()).rev() {
+    for i in (0..terms.len()-1).rev() {
         let tu = &terms[i];
         u = prev(tu.to_string(), u, &posting_list);
     }

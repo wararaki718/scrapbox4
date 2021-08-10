@@ -20,18 +20,18 @@ fn get_posting_list() -> HashMap<String, Vec<i32>> {
 fn first(term: String, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
     if posting_list.contains_key(&term) {
         let indices = &posting_list[&term];
-        return indices[0];
+        return indices[1];
     }
-    return -1;
+    return NEG_INF;
 }
 
 fn last(term: String, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
     if posting_list.contains_key(&term) {
         let indices = &posting_list[&term];
         let length = indices.len();
-        return indices[length-1];
+        return indices[length-2];
     }
-    return -1;
+    return INF;
 }
 
 fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
@@ -50,7 +50,7 @@ fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
         }
         return indices[index+1] as i32;
     }
-    return -1;
+    return INF;
 }
 
 fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
@@ -67,7 +67,7 @@ fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
             return indices[index-1] as i32;
         }
     }
-    return -1;
+    return NEG_INF;
 }
 
 fn main() {
