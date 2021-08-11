@@ -42,13 +42,11 @@ fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
         return first(term, &posting_list);
     }
 
-    if posting_list.contains_key(&term) {
-        let indices = &posting_list[&term];
-        let index = indices.binary_search(&posting_index).unwrap();
-        if index+1 >= indices.len() {
-            return -1;
+    let indices = &posting_list[&term];
+    for index in indices {
+        if posting_index < *index {
+            return *index;
         }
-        return indices[index+1] as i32;
     }
     return INF;
 }
@@ -60,13 +58,14 @@ fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
     if posting_index == INF {
         return last(term, &posting_list);
     }
-    if posting_list.contains_key(&term) {
-        let indices = &posting_list[&term];
-        let index = indices.binary_search(&posting_index).unwrap();
-        if index-1 >= 0 as usize {
-            return indices[index-1] as i32;
+
+    let indices = &posting_list[&term];
+    for index in indices.iter().rev() {
+        if posting_index > *index {
+            return *index;
         }
     }
+
     return NEG_INF;
 }
 
@@ -74,8 +73,8 @@ fn main() {
     let posting_list = get_posting_list();
     let result_first = first("first".to_string(), &posting_list);
     let result_last = last("first".to_string(), &posting_list);
-    let result_next = next("first".to_string(), result_first, &posting_list);
-    let result_prev = prev("first".to_string(), result_last, &posting_list);
+    let result_next = next("first".to_string(), 12, &posting_list);
+    let result_prev = prev("first".to_string(), 23, &posting_list);
     println!("first: {}", result_first);
     println!("last : {}", result_last);
     println!("next : {}", result_next);
