@@ -1,5 +1,5 @@
 [package]
-name = "ch02_next_phrase_with_sequantial_scan"
+name = "ch02_next_phrase_with_sequential_scan"
 version = "0.1.0"
 edition = "2018"
 
