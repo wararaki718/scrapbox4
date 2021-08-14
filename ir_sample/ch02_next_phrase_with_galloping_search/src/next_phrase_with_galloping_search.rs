@@ -26,6 +26,20 @@ fn last(term: String, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
     return INF;
 }
 
+fn binary_search_next(p_t: &Vec<i32>, low_: usize, high_: usize, current: i32) -> usize {
+    let mut high = high_;
+    let mut low = low_;
+    while high - low > 1 {
+        let mid: usize = (high+low)/2;
+        if p_t[mid] <= current {
+            low = mid;
+        } else {
+            high = mid;
+        }
+    }
+    return high;
+}
+
 fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
     if posting_index == INF {
         return INF;
@@ -44,16 +58,41 @@ fn next(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
         return first(term, &posting_list);
     }
 
+    let mut low: usize = 1;
     let indices = &posting_list[&term];
-    if c_t > 1 || indices[c_t-1] > posting_index {
-        c_t = 1;
+    if c_t > 1 || indices[c_t-1] <= posting_index {
+        low = c_t - 1;
     }
-    while indices[c_t] <= posting_index {
-        c_t += 1;
+    let mut jump: usize = 1;
+    let mut high: usize = low + jump;
+    let l_t: usize = indices.len()-1;
+    while high < l_t && indices[high] <= posting_index {
+        low = high;
+        jump = 2 * jump;
+        high = low + jump;
     }
+    
+    if high > l_t {
+        high = l_t;
+    }
+    c_t = binary_search_next(indices, low, high, posting_index);
     C_T_NEXT.lock().unwrap().remove(&term);
     C_T_NEXT.lock().unwrap().insert((&term).to_string(), c_t);
     return indices[c_t];
+}
+
+fn binary_search_prev(p_t: &Vec<i32>, low_: usize, high_: usize, current: i32) -> usize {
+    let mut low = low_;
+    let mut high = high_;
+    while high - low > 1 {
+        let mid: usize = (high+low) / 2;
+        if p_t[mid] <= current {
+            low = mid;
+        } else {
+            high = mid;
+        }
+    }
+    return low;
 }
 
 fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32>>) -> i32 {
@@ -76,12 +115,24 @@ fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
         return last(term, &posting_list);
     }
 
-    if c_t < l_t && indices[c_t+1] < posting_index {
-        c_t = l_t;
+    let mut high: usize = l_t;
+    if c_t < l_t && indices[c_t+1] >= posting_index {
+        high = c_t + 1;
     }
-    while indices[c_t] >= posting_index {
-        c_t -= 1;
+    let mut jump: usize = 1;
+    let mut low: usize = high - jump;
+    while low > 1 && indices[low] >= posting_index {
+        high = low;
+        jump *= 2;
+        if high < jump {
+            break;
+        }
+        low = high - jump;
     }
+    if low < 1  || high < jump {
+        low = 1;
+    }
+    c_t = binary_search_prev(indices, low, high, posting_index);
     C_T_PREV.lock().unwrap().remove(&term);
     C_T_PREV.lock().unwrap().insert((&term).to_string(), c_t);
     return indices[c_t];
