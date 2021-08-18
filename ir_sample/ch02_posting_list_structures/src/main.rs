@@ -2,7 +2,12 @@ mod normalize;
 mod posting_list;
 
 use normalize::normalize;
-use posting_list::{get_posting_list_docid_index, get_posting_list_frequency_index, get_posting_list_scheme_independent_index};
+use posting_list::{
+    get_posting_list_docid_index,
+    get_posting_list_frequency_index,
+    get_posting_list_scheme_independent_index,
+    get_posting_list_positional_index
+};
 
 fn main() {
     let docs = vec![
@@ -21,6 +26,7 @@ fn main() {
     let pl_docid = get_posting_list_docid_index(&norm_docs);
     let pl_freq = get_posting_list_frequency_index(&norm_docs);
     let pl_si = get_posting_list_scheme_independent_index(&norm_docs);
+    let pl_pos = get_posting_list_positional_index(&norm_docs);
 
     // check
     let term = "quarrel";
@@ -28,5 +34,6 @@ fn main() {
     println!("docid index             : {:?}", pl_docid[term]);
     println!("frequency index         : {:?}", pl_freq[term]);
     println!("scheme-independent index: {:?}", pl_si[term]);
+    println!("positional index        : {:?}", pl_pos[term]);
     println!("DONE");
 }
