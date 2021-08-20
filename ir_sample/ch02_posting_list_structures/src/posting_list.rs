@@ -68,14 +68,6 @@ impl Position {
     }
 }
 
-/*
-impl fmt::Display for Position {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} {} {:?}", self.d, self.f_td, self.p)
-    }
-}
-*/
-
 pub fn get_posting_list_positional_index(docs: &Vec<String>) -> HashMap<String, Vec<Position>> {
     let mut posting_list: HashMap<String, Vec<Position>> = HashMap::new();
     for (i, doc) in docs.iter().enumerate() {
