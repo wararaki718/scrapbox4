@@ -6,7 +6,6 @@ pub struct TfidfVectorizer {
     f_t: HashMap<String, i32>
 }
 
-
 impl TfidfVectorizer {
     pub fn new() -> Self {
         Self {
@@ -14,6 +13,7 @@ impl TfidfVectorizer {
             f_t: HashMap::new()
         }
     }
+
     pub fn feature_names(self: &Self) -> Vec<String> {
         let mut names: Vec<String> = Vec::new();
         for key in self.f_t.keys() {
@@ -49,9 +49,8 @@ impl TfidfVectorizer {
     pub fn transform(self: &Self, docs: &Vec<String>) -> Vec<Vec<f32>> {
         let mut x_tfidf: Vec<Vec<f32>> = Vec::new();
         for doc in docs {
-            let terms = doc.split(" ");
             let mut f_t_d: HashMap<String, i32> = HashMap::new();
-            for term in terms {
+            for term in doc.split(" ") {
                 if !f_t_d.contains_key(&term.to_string()) {
                     f_t_d.insert(term.to_string(), 0 as i32);
                 }
