@@ -17,7 +17,6 @@ impl TfidfVectorizer {
         for key in self.f_t.keys() {
             names.push(key.to_string());
         }
-        names.sort();
         return names;
     }
 
@@ -33,6 +32,15 @@ impl TfidfVectorizer {
                 }
             }
         }
+    }
+
+    fn normalize(self: &Self, vecs: Vec<Vec<f32>>) -> Vec<Vec<f32>> {
+        let mut x_norm: Vec<Vec<f32>> = Vec::new();
+        for vec in vecs {
+            let x_ = vec.iter().map(|x| x*x).sum::<f32>().sqrt();
+            x_norm.push(vec.iter().map(|x| x / x_).collect());
+        }
+        return x_norm;
     }
 
     pub fn transform(self: &Self, docs: &Vec<String>) -> Vec<Vec<f32>> {
@@ -69,6 +77,6 @@ impl TfidfVectorizer {
             tfidf.push(v);
         }
     
-        return tfidf;
+        return self.normalize(tfidf);
     }
 }
