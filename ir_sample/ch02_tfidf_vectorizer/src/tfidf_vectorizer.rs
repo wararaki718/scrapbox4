@@ -75,7 +75,6 @@ impl TfidfVectorizer {
                     v.push(0 as f32);
                 }
             }
-    
             tfidf.push(v);
         }
     
