@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 
 pub struct TfidfVectorizer {
+    n: i32,
     f_t: HashMap<String, i32>
 }
 
@@ -9,6 +10,7 @@ pub struct TfidfVectorizer {
 impl TfidfVectorizer {
     pub fn new() -> Self {
         Self {
+            n: 0 as i32,
             f_t: HashMap::new()
         }
     }
@@ -21,6 +23,7 @@ impl TfidfVectorizer {
     }
 
     pub fn fit(&mut self, docs: &Vec<String>) {
+        self.n = docs.len() as i32;
         for doc in docs {
             let terms: HashSet<&str> = doc.split(" ").into_iter().collect();
             for term in terms {
@@ -57,14 +60,13 @@ impl TfidfVectorizer {
                 }
             }
     
-            let n = docs.len() as f32;
             let e = 2.0;
             let mut v: Vec<f32> = Vec::new();
             for (term, f) in &self.f_t {
                 if f_t_d.contains_key(term) {
                     if let Some(f_td) = f_t_d.get_mut(term) {
                         let tf = (*f_td as f32).log(e) + 1.0;
-                        let idf = (n / *f as f32).log(e);
+                        let idf = (self.n as f32 / *f as f32).log(e);
                         v.push(tf*idf);
                     } else {
                         v.push(0 as f32);
