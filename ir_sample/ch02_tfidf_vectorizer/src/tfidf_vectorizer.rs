@@ -47,7 +47,7 @@ impl TfidfVectorizer {
     }
 
     pub fn transform(self: &Self, docs: &Vec<String>) -> Vec<Vec<f32>> {
-        let mut tfidf: Vec<Vec<f32>> = Vec::new();
+        let mut x_tfidf: Vec<Vec<f32>> = Vec::new();
         for doc in docs {
             let terms = doc.split(" ");
             let mut f_t_d: HashMap<String, i32> = HashMap::new();
@@ -63,21 +63,19 @@ impl TfidfVectorizer {
             let e = 2.0;
             let mut v: Vec<f32> = Vec::new();
             for (term, f) in &self.f_t {
+                let mut x = 0 as f32;
                 if f_t_d.contains_key(term) {
                     if let Some(f_td) = f_t_d.get_mut(term) {
                         let tf = (*f_td as f32).log(e) + 1.0;
                         let idf = (self.n as f32 / *f as f32).log(e);
-                        v.push(tf*idf);
-                    } else {
-                        v.push(0 as f32);
+                        x = tf*idf;
                     }
-                } else {
-                    v.push(0 as f32);
                 }
+                v.push(x);
             }
-            tfidf.push(v);
+            x_tfidf.push(v);
         }
     
-        return self.normalize(tfidf);
+        return self.normalize(x_tfidf);
     }
 }
