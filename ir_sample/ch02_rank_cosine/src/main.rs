@@ -38,7 +38,8 @@ fn main() {
     let vecs = vectorizer.transform(&norm_docs);
     let qvecs = vectorizer.transform(&query);
 
-    let results = rank_cosine(qvecs[0].to_vec(), vecs);
+    let k: usize = 5 as usize;
+    let results = rank_cosine(qvecs[0].to_vec(), vecs, k);
     for (i, result) in results.iter().enumerate() {
         println!("rank {}: docid={}, score={}", i+1, result.docid, result.score);
     }
