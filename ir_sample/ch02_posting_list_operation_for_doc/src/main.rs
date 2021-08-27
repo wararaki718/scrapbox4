@@ -21,8 +21,8 @@ fn main() {
     let pl_pos = get_posting_list_positional_index(&norm_docs);
 
     // check
-    let term = "quarrel";
-    println!("term={}", term);
-    println!("positional index: {:?}", pl_pos[term]);
+    for key in pl_pos.keys() {
+        println!("{}: {:?}", key, pl_pos[key]);
+    }
     println!("DONE");
 }
