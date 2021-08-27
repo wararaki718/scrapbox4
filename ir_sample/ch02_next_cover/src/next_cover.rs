@@ -56,7 +56,11 @@ fn prev(term: String, posting_index: i32, posting_list: &HashMap<String, Vec<i32
     return NEG_INF;
 }
 
-pub fn next_cover(terms: Vec<String>, docs: Vec<Vec<String>>, position: usize) -> (i32, i32) {
-
-    return (INF, INF);
+pub fn next_cover(terms: String, position: i32, posting_list: &HashMap<String, Vec<i32>>) -> (i32, i32) {
+    let v: i32 = terms.split(" ").map(|x| next(String::from(x), position, &posting_list)).max().map_or(INF, |x| x);
+    if v == INF {
+        return (INF, INF);
+    }
+    let u: i32 = terms.split(" ").map(|x| prev(String::from(x), v+1 as i32, &posting_list)).min().map_or(NEG_INF, |x| x);
+    return (u, v);
 }

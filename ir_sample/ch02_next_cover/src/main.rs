@@ -1,8 +1,10 @@
 mod normalize;
 mod next_cover;
+mod posting_list;
 
 use normalize::normalize;
 use next_cover::next_cover;
+use posting_list::{get_posting_list, get_posting_list_positional_index};
 
 
 fn main() {
@@ -13,15 +15,26 @@ fn main() {
         "No better.",
         "Well, sir."
     ];
+    /*
     let query = vec![
-        "quarrel sir".to_string()
+        String::from("quarrel sir")
     ];
+    */
+
     let mut norm_docs = Vec::new();
-    println!("documents:");
-    for (i, doc) in docs.iter().enumerate() {
-        norm_docs.push(normalize(doc.to_string()));
-        println!("docid={}: {}", i+1, doc);
+    for doc in docs {
+        norm_docs.push(normalize(String::from(doc)));
     }
-    println!("");
+
+    // create posting list
+    //let pl_pos = get_posting_list_positional_index(&norm_docs);
+    let pl = get_posting_list(&norm_docs);
+    /*
+    for key in pl.keys() {
+        println!("{}: {:?}", key, pl[key]);
+    }
+    */
+    let result = next_cover(String::from("quarrel sir"), 0, &pl);
+    println!("{:?}", result);
     println!("DONE");
 }
