@@ -1,7 +1,9 @@
 mod normalize;
+mod operations;
 mod posting_list;
 
 use normalize::normalize;
+use operations::{docid, offset};
 use posting_list::get_posting_list_positional_index;
 
 fn main() {
@@ -18,11 +20,16 @@ fn main() {
     }
     
     // create posting list
-    let pl_pos = get_posting_list_positional_index(&norm_docs);
+    let pl = get_posting_list_positional_index(&norm_docs);
 
     // check
-    for key in pl_pos.keys() {
-        println!("{}: {:?}", key, pl_pos[key]);
+    for (key, value) in &pl {
+        println!("{}: {:?}", key, value);
     }
+    let position: i32 = 5;
+    let did = docid(position, &pl);
+    let off = offset(position, &pl);
+    println!("docid({}) : {}", position, did);
+    println!("offset({}): {}", position, off);
     println!("DONE");
 }
