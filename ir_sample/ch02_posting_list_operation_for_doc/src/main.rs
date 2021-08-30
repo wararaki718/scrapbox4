@@ -33,14 +33,15 @@ fn main() {
     println!("docid({}) : {}", position, did);
     println!("offset({}): {}", position, off);
 
+    let dposition: i32 = 3;
     let term = "sir";
     let fdoc = first_doc(String::from(term), &pl);
     let ldoc = last_doc(String::from(term), &pl);
-    let ndoc = next_doc(String::from(term), position, &pl);
-    let pdoc = prev_doc(String::from(term), position, &pl);
+    let ndoc = next_doc(String::from(term), dposition, &pl);
+    let pdoc = prev_doc(String::from(term), dposition, &pl);
     println!("first({})  : {}", term, fdoc);
     println!("last({})   : {}", term, ldoc);
-    println!("next({}:{}): {}", term, position, ndoc);
-    println!("prev({}:{}): {}", term, position, pdoc);
+    println!("next({}:{}): {}", term, dposition, ndoc);
+    println!("prev({}:{}): {}", term, dposition, pdoc);
     println!("DONE");
 }

@@ -96,10 +96,8 @@ pub fn next_doc(term: String, current: i32, posting_list: &HashMap<String, Vec<P
 
     let docs = &posting_list[&term];
     for doc in docs {
-        for index in &doc.p {
-            if current < *index {
-                return doc.d;
-            }
+        if current < doc.d {
+            return doc.d;
         }
     }
     return INF;
@@ -117,10 +115,8 @@ pub fn prev_doc(term: String, current: i32, posting_list: &HashMap<String, Vec<P
 
     let docs = &posting_list[&term];
     for doc in docs {
-        for index in &doc.p {
-            if current > *index {
-                return doc.d;
-            }
+        if current > doc.d {
+            return doc.d;
         }
     }
     return NEG_INF;
