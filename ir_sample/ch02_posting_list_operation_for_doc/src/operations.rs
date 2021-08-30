@@ -2,6 +2,10 @@ use std::collections::{BTreeMap, HashMap};
 use ch02_posting_list_operation_for_doc::position::Position;
 
 
+static INF: i32 = i32::MAX;
+static NEG_INF: i32 = i32::MIN;
+
+
 pub fn docid(position: i32, posting_list: &HashMap<String, Vec<Position>>) -> i32 {
     let mut doc_offsets: BTreeMap<i32, i32> = BTreeMap::new();
     for value in posting_list.values() {
@@ -58,4 +62,66 @@ pub fn offset(position: i32, posting_list: &HashMap<String, Vec<Position>>) -> i
     }
 
     return -1 as i32;
+}
+
+
+pub fn first_doc(term: String, posting_list: &HashMap<String, Vec<Position>>) -> i32 {
+    if posting_list.contains_key(&term) {
+        if let Some(doc) = &posting_list[&term].first() {
+            return doc.d;
+        }
+    }
+    return NEG_INF;
+}
+
+
+pub fn last_doc(term: String, posting_list: &HashMap<String, Vec<Position>>) -> i32 {
+    if posting_list.contains_key(&term) {
+        if let Some(doc) = &posting_list[&term].last() {
+            return doc.d;
+        }
+    }
+    return INF;
+}
+
+
+pub fn next_doc(term: String, current: i32, posting_list: &HashMap<String, Vec<Position>>) -> i32 {
+    if current == INF {
+        return INF;
+    }
+    
+    if current == NEG_INF {
+        return first_doc(term, &posting_list);
+    }
+
+    let docs = &posting_list[&term];
+    for doc in docs {
+        for index in &doc.p {
+            if current < *index {
+                return doc.d;
+            }
+        }
+    }
+    return INF;
+}
+
+
+pub fn prev_doc(term: String, current: i32, posting_list: &HashMap<String, Vec<Position>>) -> i32 {
+    if current == NEG_INF {
+        return NEG_INF;
+    }
+
+    if current == INF {
+        return last_doc(term, &posting_list);
+    }
+
+    let docs = &posting_list[&term];
+    for doc in docs {
+        for index in &doc.p {
+            if current > *index {
+                return doc.d;
+            }
+        }
+    }
+    return NEG_INF;
 }

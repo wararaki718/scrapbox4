@@ -3,8 +3,9 @@ mod operations;
 mod posting_list;
 
 use normalize::normalize;
-use operations::{docid, offset};
+use operations::{docid, offset, first_doc, last_doc, next_doc, prev_doc};
 use posting_list::get_posting_list_positional_index;
+
 
 fn main() {
     let docs = vec![
@@ -31,5 +32,15 @@ fn main() {
     let off = offset(position, &pl);
     println!("docid({}) : {}", position, did);
     println!("offset({}): {}", position, off);
+
+    let term = "sir";
+    let fdoc = first_doc(String::from(term), &pl);
+    let ldoc = last_doc(String::from(term), &pl);
+    let ndoc = next_doc(String::from(term), position, &pl);
+    let pdoc = prev_doc(String::from(term), position, &pl);
+    println!("first({})  : {}", term, fdoc);
+    println!("last({})   : {}", term, ldoc);
+    println!("next({}:{}): {}", term, position, ndoc);
+    println!("prev({}:{}): {}", term, position, pdoc);
     println!("DONE");
 }
