@@ -25,7 +25,7 @@ fn main() {
     }
 
     let pl = get_posting_list_positional_index(&norm_docs);
-    let result = rank_proximity(String::from("sir"), 3, &pl);
+    let result = rank_proximity(String::from("quarrel sir"), 3, &pl);
     println!("{:?}", result);
     println!("DONE");
 }
