@@ -8,7 +8,6 @@ mod rank_proximity;
 
 use next_cover::next_cover;
 use normalize::normalize;
-use operations::{docid, offset, first, last, next, prev};
 use posting::Posting;
 use posting_list::get_posting_list;
 use rank_proximity::rank_proximity;
@@ -33,30 +32,15 @@ fn main() {
     // check
     println!("posting list:");
     for (key, value) in &pl {
-        println!("{}: {:?}", key, value);
+        if key == "sir" || key == "you" {
+            println!("{}: {:?}", key, value);
+        }
     }
     println!("");
 
-    println!("operations");
-    let position = Posting::new(1, 1);
-    let did = docid(position);
-    let off = offset(position);
-    println!("docid({:?}) : {:?}", position, did);
-    println!("offset({:?}): {:?}", position, off);
-
-    let term = "sir";
-    let fdoc = first(String::from(term), &pl);
-    let ldoc = last(String::from(term), &pl);
-    let ndoc = next(String::from(term), position, &pl);
-    let pdoc = prev(String::from(term), position, &pl);
-    println!("first({})  : {:?}", term, fdoc);
-    println!("last({})   : {:?}", term, ldoc);
-    println!("next({}:{:?}): {:?}", term, position, ndoc);
-    println!("prev({}:{:?}): {:?}", term, position, pdoc);
-    println!("");
-
     println!("next cover:");
-    let terms = "quarrel sir";
+    let terms = "you sir";
+    let position = Posting::new(1, 1);
     let result = next_cover(String::from(terms), position, &pl);
     println!("result: {:?}", result);
     println!("");

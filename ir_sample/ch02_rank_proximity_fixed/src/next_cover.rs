@@ -12,8 +12,10 @@ pub fn next_cover(terms: String, position: Posting, posting_list: &HashMap<Strin
         return (Posting::new(INF, INF), Posting::new(INF, INF));
     }
     let u: Posting = terms.split(" ").map(|x| prev(String::from(x), Posting::new(docid(v), offset(v)+1), &posting_list)).min().map_or(Posting::new(INF, INF), |x| x);
+
+    // println!("u={:?}, v={:?}", u, v);
     if docid(u) == docid(v) {
         return (u, v);
     }
-    return next_cover(terms, u, &posting_list);
+    return next_cover(terms, v, &posting_list);
 }

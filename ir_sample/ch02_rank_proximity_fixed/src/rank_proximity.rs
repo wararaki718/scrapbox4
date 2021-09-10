@@ -6,12 +6,12 @@ use crate::operations::{docid, offset};
 use crate::next_cover::next_cover;
 
 static INF: i32 = i32::MAX;
-// static NEG_INF: i32 = i32::MIN;
+static NEG_INF: i32 = i32::MIN;
 
 
 pub fn rank_proximity(terms: String, k: usize, posting_list: &HashMap<String, Vec<Posting>>) -> Vec<Result> {
     let mut results: Vec<Result> = Vec::new();
-    let (mut u, mut v) = next_cover((&terms).to_string(), Posting::new(INF, INF), &posting_list);
+    let (mut u, mut v) = next_cover((&terms).to_string(), Posting::new(NEG_INF, NEG_INF), &posting_list);
     // println!("{:?}", u);
     // println!("{:?}", v);
 
