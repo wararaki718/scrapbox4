@@ -156,7 +156,7 @@ pub fn prev(term: String, current: i32, posting_list: &HashMap<String, Vec<Posit
     }
 
     let docs = &posting_list[&term];
-    for doc in docs {
+    for doc in docs.iter().rev() {
         for p in &doc.p {
             let p_offset = p + offsets[doc.d as usize];
             if current > p_offset {

@@ -95,7 +95,7 @@ pub fn next_doc(term: String, current: i32, posting_list: &HashMap<String, Vec<P
     }
 
     let docs = &posting_list[&term];
-    for doc in docs {
+    for doc in docs.iter().rev() {
         if current < doc.d {
             return doc.d;
         }
