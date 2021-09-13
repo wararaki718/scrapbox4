@@ -38,7 +38,7 @@ fn main() {
 
     // sample data
     let p_right = Posting::new(1, 1);
-    let p_left = Posting::new(5, 20);
+    let p_left = Posting::new(4, 20);
 
     let q1 = Query::new(String::from("quarrel"), None, None);
     let q2 = Query::new(String::from("sir"), None, None);
