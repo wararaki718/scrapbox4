@@ -47,7 +47,7 @@ pub fn next(term: String, current: Posting, posting_list: &HashMap<String, Vec<P
     }
 
     let postings = &posting_list[&term];
-    for posting in postings {
+    for posting in postings.iter().rev() {
         if docid(current) < docid(*posting) || (docid(current) == docid(*posting) && offset(current) < offset(*posting)) {
             return *posting;
         }
