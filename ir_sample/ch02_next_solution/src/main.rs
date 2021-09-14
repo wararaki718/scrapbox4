@@ -11,7 +11,7 @@ use normalize::normalize;
 use posting::Posting;
 use posting_list::get_posting_list;
 use query::Query;
-use next_solution::next_solution;
+use next_solution::{next_solution, next_solution_all};
 
 
 fn main() {
@@ -47,7 +47,15 @@ fn main() {
     let q4 = Query::new(String::from("OR"), Some(q1), Some(q2));
     let query = Query::new(String::from("AND"), Some(q4), Some(q3));
 
-    let result = next_solution(query, position, &pl);
-    println!("result = {}", result);
+    let result = next_solution(query.clone(), position, &pl);
+    println!("get one:");
+    println!("result = {:?}", result);
+    println!("");
+    let results = next_solution_all(query.clone(), &pl);
+    println!("get all:");
+    for res in results {
+        println!("{:?}", res);
+    }
+    println!("");
     println!("DONE");
 }
