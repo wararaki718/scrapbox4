@@ -10,7 +10,7 @@ use normalize::normalize;
 use posting::Posting;
 use posting_list::get_posting_list;
 use query::Query;
-use query_operations::{doc_right, doc_left};
+use query_operations::{doc_right, doc_left, doc_right_not};
 
 
 fn main() {

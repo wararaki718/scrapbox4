@@ -28,3 +28,17 @@ pub fn doc_left(query: Query, current: Posting, posting_list: &HashMap<String, V
         _ => -1 as i32
     }
 }
+
+pub fn doc_right_not(query: Query, current: Posting, posting_list: &HashMap<String, Vec<Posting>>) -> i32 {
+    if docid(current) == INF {
+        return INF;
+    }
+    let mut u: i32 = docid(current);
+    let mut v: i32 = next_doc(query.clone(), Posting::new(u, 1), &posting_list);
+    while v == u + 1 {
+        u = v;
+        v = next_doc(query.clone(), Posting::new(u, 1), &posting_list);
+    }
+
+    return u + 1;
+}
