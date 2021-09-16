@@ -2,16 +2,18 @@
 pub struct Query {
     pub term: String,
     pub right: Box<Option<Query>>,
-    pub left: Box<Option<Query>>
+    pub left: Box<Option<Query>>,
+    pub is_not: bool
 }
 
 
 impl Query {
-    pub fn new(term: String, right: Option<Query>, left: Option<Query>) -> Self {
+    pub fn new(term: String, right: Option<Query>, left: Option<Query>, is_not: bool) -> Self {
         Self {
             term: term,
             right: Box::new(right),
-            left: Box::new(left)
+            left: Box::new(left),
+            is_not: is_not
         }
     }
 
