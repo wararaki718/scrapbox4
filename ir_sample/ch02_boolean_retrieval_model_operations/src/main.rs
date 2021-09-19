@@ -22,9 +22,9 @@ fn main() {
         "Well, sir."
     ];
     let mut norm_docs = Vec::new();
-    for doc in docs {
-        norm_docs.push(normalize(String::from(doc)));
-        println!("{}", doc);
+    for (i, doc) in docs.iter().enumerate() {
+        norm_docs.push(normalize(String::from(*doc)));
+        println!("{}: {}", (i+1), *doc);
     }
     
     // create posting list
@@ -55,14 +55,21 @@ fn main() {
     let q8 = Query::new(String::from("sir"), None, None, true);
     let q9 = Query::new(String::from("OR"), Some(q7), Some(q8), false);
     let q10 = q9.clone();
+    let mut q11 = q10.clone();
+    q11.is_not = true;
+    let q12 = q11.clone();
 
     let result_right = doc_right(q5, p_right, &pl);
     let result_left = doc_left(q6, p_left, &pl);
     let result_right_not = doc_right(q9, p_right, &pl);
     let result_left_not = doc_left(q10, p_left, &pl);
+    let result_right_not_operation = doc_right(q11, p_right, &pl);
+    let result_left_not_operation = doc_left(q12, p_left, &pl);
     println!("doc_right    : docid = {}", result_right);
     println!("doc_left     : docid = {}", result_left);
     println!("doc_right_not: docid = {}", result_right_not);
     println!("doc_left_not : docid = {}", result_left_not);
+    println!("doc_right_not: docid = {}", result_right_not_operation);
+    println!("doc_left_not : docid = {}", result_left_not_operation);
     println!("DONE");
 }
