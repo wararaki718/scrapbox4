@@ -2,6 +2,7 @@ from collections import Counter
 import math
 
 import numpy as np
+from numpy.lib.function_base import average
 
 from sklearn.metrics import ndcg_score
 
@@ -50,3 +51,23 @@ def gini_at_k(y_all_items: np.ndarray, y_pred_items: np.ndarray, k: int=10) -> f
     gini /= (n_items * n_total_items)
 
     return gini
+
+
+def map_at_k(y_interactions: np.ndarray, y_scores: np.ndarray, k: int=10) -> float:
+    average_precision = 0.0
+    for interaction, score in zip(y_interactions, y_scores):
+        for i in range(1, k+1):
+            average_precision += precision_at_k(interaction, score, i)
+    
+    return average_precision / y_interactions.shape[0]
+
+def mrr_at_k(y_interactions: np.ndarray, y_scores: np.ndarray, k: int=10) -> float:
+    mrr = 0.0
+    for interaction, score in zip(y_interactions, y_scores):
+        for i in range(1, k+1):
+            precision = precision_at_k(interaction, score, i)
+            if precision > 0.0:
+                mrr += precision
+                break
+    
+    return mrr / y_interactions.shape[0]
