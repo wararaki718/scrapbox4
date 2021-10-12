@@ -55,19 +55,23 @@ def gini_at_k(y_all_items: np.ndarray, y_pred_items: np.ndarray, k: int=10) -> f
 
 def map_at_k(y_interactions: np.ndarray, y_scores: np.ndarray, k: int=10) -> float:
     average_precision = 0.0
+    weights = np.arange(1, k+1).reshape(1, -1) / k
     for interaction, score in zip(y_interactions, y_scores):
-        for i in range(1, k+1):
-            average_precision += precision_at_k(interaction, score, i)
+        indices = score.argsort()[::-1]
+        y = interaction[indices][:k]
+        average_precision += (weights * y).sum() / y.sum()
     
     return average_precision / y_interactions.shape[0]
+
 
 def mrr_at_k(y_interactions: np.ndarray, y_scores: np.ndarray, k: int=10) -> float:
     mrr = 0.0
     for interaction, score in zip(y_interactions, y_scores):
-        for i in range(1, k+1):
-            precision = precision_at_k(interaction, score, i)
-            if precision > 0.0:
-                mrr += precision
+        indices = score.argsort()[::-1]
+        y = interaction[indices][:k]
+        for idx, i in enumerate(y, start=1):
+            if i > 0:
+                mrr += i/idx
                 break
     
     return mrr / y_interactions.shape[0]
