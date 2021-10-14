@@ -1,6 +1,6 @@
 import numpy as np
 
-from sample_poetry_docker.module import plus
+from sample_poetry_docker_with_build.module import plus
 
 
 def test_module_plus():
