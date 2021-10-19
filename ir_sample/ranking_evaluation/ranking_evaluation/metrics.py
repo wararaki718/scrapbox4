@@ -2,7 +2,6 @@ from collections import Counter
 import math
 
 import numpy as np
-from numpy.lib.function_base import average
 
 from sklearn.metrics import ndcg_score
 
