@@ -1,17 +1,44 @@
 import math
 from collections import Counter
 
+import numpy as np
 import pandas as pd
-from sklearn.metrics import ndcg_score
 
 
-def ndcg_at_k(df: pd.DataFrame, k: int=10) -> float:
+def _dcg1(rels: np.ndarray) -> float:
+    score = rels[0]
+    for i in range(1, rels.shape[0]):
+        score += rels[i] / np.log2(i + 1)
+    return score
+
+
+def _dcg2(rels: np.ndarray) -> float:
+    score = 0.0
+    for i, rel in enumerate(rels):
+        score += (2 ** rel - 1) / np.log2(i + 2)
+    return score
+
+
+def ndcg_at_k(df: pd.DataFrame, k: int=10, dcg_type: int=2) -> float:
     qids = df.qid.unique()
     score = 0.0
 
+    if dcg_type == 1:
+        _dcg = _dcg1
+    else:
+        _dcg = _dcg2
+
     for qid in qids:
         target = df[df.qid == qid]
-        score += ndcg_score(target.label_norm.values.reshape(1, -1), target.pred.values.reshape(1, -1), k=k)
+        indices = target.pred.values.argsort()[::-1]
+        dcg = _dcg(target.label_norm.values[indices][:k])
+
+        indices = target.label_norm.values.argsort()[::-1]
+        idcg = _dcg(target.label_norm.values[indices][:k])
+        if math.isclose(dcg, 0.0) or math.isclose(idcg, 0.0):
+            continue
+        score += (dcg / idcg)
+    
     return score / qids.shape[0]
 
 
@@ -85,6 +112,6 @@ def entropy_at_k(df: pd.DataFrame, k: int=5) -> float:
         if value == 0:
             continue
         p = value / n_total_items
-        score += (-math.log(p) * p)
+        score += (-math.log2(p) * p)
     
     return score
