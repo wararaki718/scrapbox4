@@ -1,7 +1,7 @@
 import numpy as np
 from loader import Loader
 
-from metrics import ndcg_at_k, mrr_at_k, map_at_k, recall_at_k, count_appeared_docs_at_k, entropy_at_k
+from metrics import ndcg_at_k, mrr_at_k, map_at_k, recall_at_k, count_appeared_docs_at_k, entropy_at_k, gini_at_k
 
 
 def main():
@@ -23,6 +23,7 @@ def main():
     recall_score = recall_at_k(df, k=5)
     appeared_score = count_appeared_docs_at_k(df, k=5)
     entropy_score = entropy_at_k(df, k=5)
+    gini_score = gini_at_k(df, k=5)
 
     print(f"ndcg    : {ndcg_score}")
     print(f"map     : {map_score}")
@@ -30,6 +31,7 @@ def main():
     print(f"recall  : {recall_score}")
     print(f"num docs: {appeared_score}")
     print(f"entropy : {entropy_score}")
+    print(f"gini    : {gini_score}")
     print("DONE")
 
 

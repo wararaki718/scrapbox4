@@ -105,7 +105,7 @@ def entropy_at_k(df: pd.DataFrame, k: int=5) -> float:
         indices = target.pred.values.argsort()[::-1]
         docs = target.docid.values[indices][:k]
         total_counts.update(docs)
-    n_total_items = len(total_counts)
+    n_total_items = sum(total_counts.values())
 
     score = 0.0
     for value in total_counts.values():
@@ -115,3 +115,24 @@ def entropy_at_k(df: pd.DataFrame, k: int=5) -> float:
         score += (-math.log2(p) * p)
     
     return score
+
+
+def gini_at_k(df: pd.DataFrame, k: int=5) -> float:
+    qids = df.qid.unique()
+
+    total_counts = Counter()
+    for qid in qids:
+        target = df[df.qid == qid]
+        indices = target.pred.values.argsort()[::-1]
+        docs = target.docid.values[indices][:k]
+        total_counts.update(docs)
+    n_total_items = sum(total_counts.values())
+    
+    score = 0.0
+    for value in total_counts.values():
+        if value == 0:
+            continue
+        p = value / n_total_items
+        score += p**2
+    
+    return 1.0 - score
