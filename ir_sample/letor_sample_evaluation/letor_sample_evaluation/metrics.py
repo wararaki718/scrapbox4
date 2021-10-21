@@ -126,13 +126,14 @@ def gini_at_k(df: pd.DataFrame, k: int=5) -> float:
         indices = target.pred.values.argsort()[::-1]
         docs = target.docid.values[indices][:k]
         total_counts.update(docs)
-    n_total_items = sum(total_counts.values())
     
-    score = 0.0
-    for value in total_counts.values():
-        if value == 0:
-            continue
-        p = value / n_total_items
-        score += p**2
-    
-    return 1.0 - score
+    score = 0
+    cnt = 0
+    for i in range(qids.shape[0]):
+        for j in range(i+1, qids.shape[0]):
+            score += abs(total_counts[qids[i]] - total_counts[qids[j]])
+            cnt += 1
+    score /= cnt
+    score /= 2*(sum(total_counts.values())/len(total_counts))
+                
+    return score
