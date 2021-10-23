@@ -73,9 +73,7 @@ class Loader:
                 feature[key] = value
             else:
                 feature[key] = float(value)
-        
         return feature
-
 
     def load(self, filename: str) -> pd.DataFrame:
         features = []
