@@ -8,4 +8,6 @@ pip install torch
 
 ## run
 
-open main.ipynb on your jupyter or vscode.
+```shell
+python main.py
+```
