@@ -1,0 +1,5 @@
+n_train: 500
+n_valid: 100
+n_input: 50
+n_epochs: 5
+batch_size: 32
