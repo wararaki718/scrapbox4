@@ -19,12 +19,10 @@ def pairwise_loss(s_i: torch.Tensor, s_j: torch.Tensor, S_ij: int, sigma: float=
     return C
 
 
-def train(model: RankNet, X: torch.Tensor, y: torch.Tensor, batch_size: int, n_sampling_combs: int) -> RankNet:
+def train(model: RankNet, optimizer: torch.optim.Adam, X: torch.Tensor, y: torch.Tensor, batch_size: int, n_sampling_combs: int) -> RankNet:
     indices = torch.randperm(X.shape[0])
     X = X[indices]
     y = y[indices]
-
-    optimizer = torch.optim.Adam(model.parameters())
 
     model.train()
     for k in range(0, X.shape[0], batch_size):

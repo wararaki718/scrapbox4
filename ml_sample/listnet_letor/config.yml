@@ -1,0 +1,4 @@
+n_epochs: 10
+batch_size: 128
+train_filename: dataset/MQ2008/Fold1/train.txt
+valid_filename: dataset/MQ2008/Fold1/vali.txt
