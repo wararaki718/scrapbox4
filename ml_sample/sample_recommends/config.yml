@@ -1,0 +1,10 @@
+AsymmetricCosineKNN:
+  top_k: 904
+  shrinkage: 22.76807837849637
+  feature_weighting: BM_25
+  alpha: 0.952121025916783
+IALS:
+  n_components: 42
+  alpha: 2.9095083335352574
+  reg: 3.1283501085744775e-05
+  max_epoch: 50
