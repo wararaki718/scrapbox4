@@ -1,0 +1,115 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: sample-pipelines-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-10-29T23:03:16.560162',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "Sample pipelines"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
+spec:
+  entrypoint: sample-pipelines
+  templates:
+  - name: hello-world-1
+    container:
+      args: []
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def hello_world_1():
+            print("step1")
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Hello world 1', description='')
+        _parsed_args = vars(_parser.parse_args())
+
+        _outputs = hello_world_1(**_parsed_args)
+      image: python:3.7
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": [], "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf \"%s\"
+          \"$0\" > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n", "def
+          hello_world_1():\n    print(\"step1\")\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Hello
+          world 1'', description='''')\n_parsed_args = vars(_parser.parse_args())\n\n_outputs
+          = hello_world_1(**_parsed_args)\n"], "image": "python:3.7"}}, "name": "Hello
+          world 1"}', pipelines.kubeflow.org/component_ref: '{}'}
+  - name: hello-world-2
+    container:
+      args: []
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def hello_world_2():
+            print("step2")
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Hello world 2', description='')
+        _parsed_args = vars(_parser.parse_args())
+
+        _outputs = hello_world_2(**_parsed_args)
+      image: python:3.7
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": [], "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf \"%s\"
+          \"$0\" > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n", "def
+          hello_world_2():\n    print(\"step2\")\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Hello
+          world 2'', description='''')\n_parsed_args = vars(_parser.parse_args())\n\n_outputs
+          = hello_world_2(**_parsed_args)\n"], "image": "python:3.7"}}, "name": "Hello
+          world 2"}', pipelines.kubeflow.org/component_ref: '{}'}
+  - name: hello-world-3
+    container:
+      args: []
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def hello_world_3():
+            print("step3")
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Hello world 3', description='')
+        _parsed_args = vars(_parser.parse_args())
+
+        _outputs = hello_world_3(**_parsed_args)
+      image: python:3.7
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": [], "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf \"%s\"
+          \"$0\" > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n", "def
+          hello_world_3():\n    print(\"step3\")\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Hello
+          world 3'', description='''')\n_parsed_args = vars(_parser.parse_args())\n\n_outputs
+          = hello_world_3(**_parsed_args)\n"], "image": "python:3.7"}}, "name": "Hello
+          world 3"}', pipelines.kubeflow.org/component_ref: '{}'}
+  - name: sample-pipelines
+    dag:
+      tasks:
+      - {name: hello-world-1, template: hello-world-1}
+      - {name: hello-world-2, template: hello-world-2}
+      - {name: hello-world-3, template: hello-world-3}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
