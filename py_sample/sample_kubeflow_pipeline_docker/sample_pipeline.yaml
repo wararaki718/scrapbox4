@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-01T22:19:43.540349',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
+spec:
+  entrypoint: pipeline
+  templates:
+  - name: component
+    container:
+      args: []
+      command: []
+      image: wararaki/hello-sample:latest
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"image": "wararaki/hello-sample:latest"}}}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "1426465cab1f1e17cc98ea91aaeac006a956b45a78b74cf2341912e75417c21f", "url":
+          "components.yaml"}'}
+  - name: pipeline
+    dag:
+      tasks:
+      - {name: component, template: component}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
