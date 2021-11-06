@@ -17,7 +17,7 @@ def main():
         ["preprocessor", False],
         ["trainer", False],
         ["evaluator", False]
-    ], columns=["process", "status"])
+    ], columns=["name", "status"])
     print(df)
 
     if not parser.outputpath.parents[0].exists():
