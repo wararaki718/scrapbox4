@@ -21,7 +21,7 @@ def main():
     print(df)
 
     if not parser.outputpath.parents[0].exists():
-        parser.outputpath.parents[0].mkdir()
+        parser.outputpath.parents[0].mkdir(parents=True)
 
     df.to_csv(parser.outputpath, index=False)
     print("DONE")
