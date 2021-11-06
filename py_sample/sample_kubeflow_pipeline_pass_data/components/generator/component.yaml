@@ -1,0 +1,15 @@
+name: generator
+description: data generator
+
+outputs:
+  - {name: generator_data_path, type: String, description: 'output filepath'}
+
+implementation:
+  container:
+    image: sample-generator:latest
+    command: [
+      python,
+      main.py,
+      --outputpath,
+      {outputPath: generator_data_path}
+    ]

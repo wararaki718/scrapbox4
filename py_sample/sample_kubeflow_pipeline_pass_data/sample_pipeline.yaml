@@ -1,0 +1,137 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-06T19:14:16.230935',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
+spec:
+  entrypoint: pipeline
+  templates:
+  - name: evaluator
+    container:
+      args: []
+      command: [python, main.py, --inputpath, /tmp/inputs/trainer_data_path/data,
+        --outputpath, /tmp/outputs/evaluator_data_path/data]
+      image: sample-evaluator:latest
+      imagePullPolicy: Never
+    inputs:
+      artifacts:
+      - {name: trainer-trainer_data_path, path: /tmp/inputs/trainer_data_path/data}
+    outputs:
+      artifacts:
+      - {name: evaluator-evaluator_data_path, path: /tmp/outputs/evaluator_data_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "evaluation",
+          "implementation": {"container": {"command": ["python", "main.py", "--inputpath",
+          {"inputPath": "trainer_data_path"}, "--outputpath", {"outputPath": "evaluator_data_path"}],
+          "image": "sample-evaluator:latest"}}, "inputs": [{"description": "input
+          filepath", "name": "trainer_data_path", "type": "String"}], "name": "evaluator",
+          "outputs": [{"description": "output filepath", "name": "evaluator_data_path",
+          "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "d8239a2d453d2dfb9c3415beded6cfab15a67b7a859dbfa146d74fecec559b74", "url":
+          "components/evaluator/component.yaml"}'}
+  - name: generator
+    container:
+      args: []
+      command: [python, main.py, --outputpath, /tmp/outputs/generator_data_path/data]
+      image: sample-generator:latest
+      imagePullPolicy: Never
+    outputs:
+      artifacts:
+      - {name: generator-generator_data_path, path: /tmp/outputs/generator_data_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "data
+          generator", "implementation": {"container": {"command": ["python", "main.py",
+          "--outputpath", {"outputPath": "generator_data_path"}], "image": "sample-generator:latest"}},
+          "name": "generator", "outputs": [{"description": "output filepath", "name":
+          "generator_data_path", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "12819cdfe38fe5fa3f9dfd7a0e09e3f6f9d09cc115d21983787f43efeed6f504", "url":
+          "components/generator/component.yaml"}'}
+  - name: pipeline
+    dag:
+      tasks:
+      - name: evaluator
+        template: evaluator
+        dependencies: [trainer]
+        arguments:
+          artifacts:
+          - {name: trainer-trainer_data_path, from: '{{tasks.trainer.outputs.artifacts.trainer-trainer_data_path}}'}
+      - {name: generator, template: generator}
+      - name: preprocessor
+        template: preprocessor
+        dependencies: [generator]
+        arguments:
+          artifacts:
+          - {name: generator-generator_data_path, from: '{{tasks.generator.outputs.artifacts.generator-generator_data_path}}'}
+      - name: trainer
+        template: trainer
+        dependencies: [preprocessor]
+        arguments:
+          artifacts:
+          - {name: preprocessor-preprocessor_data_path, from: '{{tasks.preprocessor.outputs.artifacts.preprocessor-preprocessor_data_path}}'}
+  - name: preprocessor
+    container:
+      args: []
+      command: [python, main.py, --inputpath, /tmp/inputs/generator_data_path/data,
+        --outputpath, /tmp/outputs/preprocessor_data_path/data]
+      image: sample-preprocessor:latest
+      imagePullPolicy: Never
+    inputs:
+      artifacts:
+      - {name: generator-generator_data_path, path: /tmp/inputs/generator_data_path/data}
+    outputs:
+      artifacts:
+      - {name: preprocessor-preprocessor_data_path, path: /tmp/outputs/preprocessor_data_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "preprocessing",
+          "implementation": {"container": {"command": ["python", "main.py", "--inputpath",
+          {"inputPath": "generator_data_path"}, "--outputpath", {"outputPath": "preprocessor_data_path"}],
+          "image": "sample-preprocessor:latest"}}, "inputs": [{"description": "input
+          filepath", "name": "generator_data_path", "type": "String"}], "name": "preprocessor",
+          "outputs": [{"description": "output filepath", "name": "preprocessor_data_path",
+          "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "57fee50d5439af535fbffde66799ad5fd10a85f2819ea6e7a7919cdde4c09649", "url":
+          "components/preprocessor/component.yaml"}'}
+  - name: trainer
+    container:
+      args: []
+      command: [python, main.py, --inputpath, /tmp/inputs/preprocessor_data_path/data,
+        --outputpath, /tmp/outputs/trainer_data_path/data]
+      image: sample-trainer:latest
+      imagePullPolicy: Never
+    inputs:
+      artifacts:
+      - {name: preprocessor-preprocessor_data_path, path: /tmp/inputs/preprocessor_data_path/data}
+    outputs:
+      artifacts:
+      - {name: trainer-trainer_data_path, path: /tmp/outputs/trainer_data_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "training",
+          "implementation": {"container": {"command": ["python", "main.py", "--inputpath",
+          {"inputPath": "preprocessor_data_path"}, "--outputpath", {"outputPath":
+          "trainer_data_path"}], "image": "sample-trainer:latest"}}, "inputs": [{"description":
+          "input filepath", "name": "preprocessor_data_path", "type": "String"}],
+          "name": "trainer", "outputs": [{"description": "output filepath", "name":
+          "trainer_data_path", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "0f6286bd690cf0052065cd666daba043ef19ede3a44570e48e38e54b7cde0e38", "url":
+          "components/trainer/component.yaml"}'}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner

@@ -1,0 +1,20 @@
+name: evaluator
+description: evaluation
+
+inputs:
+  - {name: trainer_data_path, type: String, description: 'input filepath'}
+
+outputs:
+  - {name: evaluator_data_path, type: String, description: 'output filepath'}
+
+implementation:
+  container:
+    image: sample-evaluator:latest
+    command: [
+      python,
+      main.py,
+      --inputpath,
+      {inputPath: trainer_data_path},
+      --outputpath,
+      {outputPath: evaluator_data_path}
+    ]

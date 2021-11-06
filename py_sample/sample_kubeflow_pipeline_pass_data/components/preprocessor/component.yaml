@@ -1,0 +1,20 @@
+name: preprocessor
+description: preprocessing
+
+inputs:
+  - {name: generator_data_path, type: String, description: 'input filepath'}
+
+outputs:
+  - {name: preprocessor_data_path, type: String, description: 'output filepath'}
+
+implementation:
+  container:
+    image: sample-preprocessor:latest
+    command: [
+      python,
+      main.py,
+      --inputpath,
+      {inputPath: generator_data_path},
+      --outputpath,
+      {outputPath: preprocessor_data_path}
+    ]

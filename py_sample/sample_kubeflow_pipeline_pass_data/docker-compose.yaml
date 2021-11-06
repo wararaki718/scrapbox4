@@ -1,0 +1,14 @@
+version: "3"
+services:
+  generator:
+    build: ./components/generator
+    image: sample-generator:latest
+  preprocessor:
+    build: ./components/preprocessor
+    image: sample-preprocessor:latest
+  trainer:
+    build: ./components/trainer
+    image: sample-trainer:latest
+  evaluator:
+    build: ./components/evaluator
+    image: sample-evaluator:latest

@@ -1,0 +1,20 @@
+name: trainer
+description: training
+
+inputs:
+  - {name: preprocessor_data_path, type: String, description: 'input filepath'}
+
+outputs:
+  - {name: trainer_data_path, type: String, description: 'output filepath'}
+
+implementation:
+  container:
+    image: sample-trainer:latest
+    command: [
+      python,
+      main.py,
+      --inputpath,
+      {inputPath: preprocessor_data_path},
+      --outputpath,
+      {outputPath: trainer_data_path}
+    ]
