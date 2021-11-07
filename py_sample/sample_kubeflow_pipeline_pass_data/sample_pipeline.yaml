@@ -1,12 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-06T19:14:16.230935',
-    pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
+  generateName: sample-pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-07T21:35:30.896572',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "test pipeline", "name":
+      "sample pipeline"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
 spec:
-  entrypoint: pipeline
+  entrypoint: sample-pipeline
   templates:
   - name: evaluator
     container:
@@ -56,28 +57,6 @@ spec:
           "generator_data_path", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
           "12819cdfe38fe5fa3f9dfd7a0e09e3f6f9d09cc115d21983787f43efeed6f504", "url":
           "components/generator/component.yaml"}'}
-  - name: pipeline
-    dag:
-      tasks:
-      - name: evaluator
-        template: evaluator
-        dependencies: [trainer]
-        arguments:
-          artifacts:
-          - {name: trainer-trainer_data_path, from: '{{tasks.trainer.outputs.artifacts.trainer-trainer_data_path}}'}
-      - {name: generator, template: generator}
-      - name: preprocessor
-        template: preprocessor
-        dependencies: [generator]
-        arguments:
-          artifacts:
-          - {name: generator-generator_data_path, from: '{{tasks.generator.outputs.artifacts.generator-generator_data_path}}'}
-      - name: trainer
-        template: trainer
-        dependencies: [preprocessor]
-        arguments:
-          artifacts:
-          - {name: preprocessor-preprocessor_data_path, from: '{{tasks.preprocessor.outputs.artifacts.preprocessor-preprocessor_data_path}}'}
   - name: preprocessor
     container:
       args: []
@@ -105,6 +84,28 @@ spec:
           "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
           "57fee50d5439af535fbffde66799ad5fd10a85f2819ea6e7a7919cdde4c09649", "url":
           "components/preprocessor/component.yaml"}'}
+  - name: sample-pipeline
+    dag:
+      tasks:
+      - name: evaluator
+        template: evaluator
+        dependencies: [trainer]
+        arguments:
+          artifacts:
+          - {name: trainer-trainer_data_path, from: '{{tasks.trainer.outputs.artifacts.trainer-trainer_data_path}}'}
+      - {name: generator, template: generator}
+      - name: preprocessor
+        template: preprocessor
+        dependencies: [generator]
+        arguments:
+          artifacts:
+          - {name: generator-generator_data_path, from: '{{tasks.generator.outputs.artifacts.generator-generator_data_path}}'}
+      - name: trainer
+        template: trainer
+        dependencies: [preprocessor]
+        arguments:
+          artifacts:
+          - {name: preprocessor-preprocessor_data_path, from: '{{tasks.preprocessor.outputs.artifacts.preprocessor-preprocessor_data_path}}'}
   - name: trainer
     container:
       args: []

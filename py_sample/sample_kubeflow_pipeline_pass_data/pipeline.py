@@ -28,6 +28,10 @@ def _evaluator_op(trainer_data_path: str) -> kfp.dsl.ContainerOp:
     return (evaluator_op(trainer_data_path=trainer_data_path).set_image_pull_policy("Never"))
 
 
+@kfp.dsl.pipeline(
+    name="sample pipeline",
+    description="test pipeline"
+)
 def pipeline():
     generator = _generator_op()
     preprocessor = _preprocessor_op(generator_data_path=generator.outputs["generator_data_path"])

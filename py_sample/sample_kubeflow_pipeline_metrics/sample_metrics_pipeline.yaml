@@ -1,0 +1,89 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-07T21:54:36.428639',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
+spec:
+  entrypoint: pipeline
+  templates:
+  - name: pipeline
+    dag:
+      tasks:
+      - {name: produce-metrics, template: produce-metrics}
+  - name: produce-metrics
+    container:
+      args: [--mlpipeline-metrics, /tmp/outputs/mlpipeline_metrics/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def _make_parent_dirs_and_return_path(file_path: str):
+            import os
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            return file_path
+
+        def produce_metrics(
+            mlpipeline_metrics_path
+        ):
+            import json
+            import random
+            accuracy = random.random()
+            precision = random.random()
+            recall = random.random()
+
+            metrics = {
+                "metrics": [
+                    {"name": "accuracy-score", "numberValue": accuracy, "format": "PERCENTAGE"},
+                    {"name": "precision-score", "numberValue": precision, "format": "PERCENTAGE"},
+                    {"name": "recall-score", "numberValue": recall, "format": "PERCENTAGE"},
+                ]
+            }
+
+            #return [json.dumps(metrics)]
+            with open(mlpipeline_metrics_path, "w") as f:
+                json.dump(metrics, f)
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Produce metrics', description='')
+        _parser.add_argument("--mlpipeline-metrics", dest="mlpipeline_metrics_path", type=_make_parent_dirs_and_return_path, required=True, default=argparse.SUPPRESS)
+        _parsed_args = vars(_parser.parse_args())
+
+        _outputs = produce_metrics(**_parsed_args)
+      image: python:3.8
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/outputs/mlpipeline_metrics/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--mlpipeline-metrics", {"outputPath": "mlpipeline_metrics"}],
+          "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf \"%s\" \"$0\" >
+          \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n", "def _make_parent_dirs_and_return_path(file_path:
+          str):\n    import os\n    os.makedirs(os.path.dirname(file_path), exist_ok=True)\n    return
+          file_path\n\ndef produce_metrics(\n    mlpipeline_metrics_path\n):\n    import
+          json\n    import random\n    accuracy = random.random()\n    precision =
+          random.random()\n    recall = random.random()\n\n    metrics = {\n        \"metrics\":
+          [\n            {\"name\": \"accuracy-score\", \"numberValue\": accuracy,
+          \"format\": \"PERCENTAGE\"},\n            {\"name\": \"precision-score\",
+          \"numberValue\": precision, \"format\": \"PERCENTAGE\"},\n            {\"name\":
+          \"recall-score\", \"numberValue\": recall, \"format\": \"PERCENTAGE\"},\n        ]\n    }\n\n    #return
+          [json.dumps(metrics)]\n    with open(mlpipeline_metrics_path, \"w\") as
+          f:\n        json.dump(metrics, f)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Produce
+          metrics'', description='''')\n_parser.add_argument(\"--mlpipeline-metrics\",
+          dest=\"mlpipeline_metrics_path\", type=_make_parent_dirs_and_return_path,
+          required=True, default=argparse.SUPPRESS)\n_parsed_args = vars(_parser.parse_args())\n\n_outputs
+          = produce_metrics(**_parsed_args)\n"], "image": "python:3.8"}}, "name":
+          "Produce metrics", "outputs": [{"name": "mlpipeline_metrics", "type": "Metrics"}]}',
+        pipelines.kubeflow.org/component_ref: '{}'}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
