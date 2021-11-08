@@ -1,5 +1,7 @@
 # sample visualization
 
+kubeflow pipeline v2 sdk
+
 ## setup environment
 
 ```shell
