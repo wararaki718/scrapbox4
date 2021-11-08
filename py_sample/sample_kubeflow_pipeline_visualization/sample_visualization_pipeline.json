@@ -1,0 +1,106 @@
+{
+  "pipelineSpec": {
+    "components": {
+      "comp-iris-sgdclassifier": {
+        "executorLabel": "exec-iris-sgdclassifier",
+        "inputDefinitions": {
+          "parameters": {
+            "test_sample_fraction": {
+              "type": "DOUBLE"
+            }
+          }
+        },
+        "outputDefinitions": {
+          "artifacts": {
+            "metrics": {
+              "artifactType": {
+                "schemaTitle": "system.ClassificationMetrics",
+                "schemaVersion": "0.0.1"
+              }
+            }
+          }
+        }
+      }
+    },
+    "deploymentSpec": {
+      "executors": {
+        "exec-iris-sgdclassifier": {
+          "container": {
+            "args": [
+              "--executor_input",
+              "{{$}}",
+              "--function_to_execute",
+              "iris_sgdclassifier"
+            ],
+            "command": [
+              "sh",
+              "-c",
+              "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip || python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet     --no-warn-script-location 'scikit-learn' 'kfp==1.8.7' && \"$0\" \"$@\"\n",
+              "sh",
+              "-ec",
+              "program_path=$(mktemp -d)\nprintf \"%s\" \"$0\" > \"$program_path/ephemeral_component.py\"\npython3 -m kfp.v2.components.executor_main                         --component_module_path                         \"$program_path/ephemeral_component.py\"                         \"$@\"\n",
+              "\nimport kfp\nfrom kfp.v2 import dsl\nfrom kfp.v2.dsl import *\nfrom typing import *\n\ndef iris_sgdclassifier(\n    test_sample_fraction: float,\n    metrics: Output[ClassificationMetrics]\n):\n    from sklearn import datasets, model_selection\n    from sklearn.linear_model import SGDClassifier\n    from sklearn.metrics import confusion_matrix\n\n    iris = datasets.load_iris()\n    X_train, X_text, y_train, y_test = model_selection.train_test_split(\n        iris[\"data\"], iris[\"target\"], test_size=test_sample_fraction\n    )\n\n    model = SGDClassifier()\n    model.fit(X_train, y_train)\n\n    y_preds = model_selection.cross_val_predict(model, X_train, y_train, cv=3)\n    metrics.log_confusion_matrix(\n        [\"Setosa\", \"Versicolour\", \"Virginica\"],\n        confusion_matrix(y_train, y_preds)\n    )\n\n"
+            ],
+            "image": "python:3.8"
+          }
+        }
+      }
+    },
+    "pipelineInfo": {
+      "name": "metrics-visualization-pipeline"
+    },
+    "root": {
+      "dag": {
+        "outputs": {
+          "artifacts": {
+            "iris-sgdclassifier-metrics": {
+              "artifactSelectors": [
+                {
+                  "outputArtifactKey": "metrics",
+                  "producerSubtask": "iris-sgdclassifier"
+                }
+              ]
+            }
+          }
+        },
+        "tasks": {
+          "iris-sgdclassifier": {
+            "cachingOptions": {
+              "enableCache": true
+            },
+            "componentRef": {
+              "name": "comp-iris-sgdclassifier"
+            },
+            "inputs": {
+              "parameters": {
+                "test_sample_fraction": {
+                  "runtimeValue": {
+                    "constantValue": {
+                      "doubleValue": 0.3
+                    }
+                  }
+                }
+              }
+            },
+            "taskInfo": {
+              "name": "iris-sgdclassifier"
+            }
+          }
+        }
+      },
+      "outputDefinitions": {
+        "artifacts": {
+          "iris-sgdclassifier-metrics": {
+            "artifactType": {
+              "schemaTitle": "system.ClassificationMetrics",
+              "schemaVersion": "0.0.1"
+            }
+          }
+        }
+      }
+    },
+    "schemaVersion": "2.0.0",
+    "sdkVersion": "kfp-1.8.7"
+  },
+  "runtimeConfig": {}
+}
