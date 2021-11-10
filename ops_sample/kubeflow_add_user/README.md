@@ -39,3 +39,15 @@ update user
 ```shell
 kubectl apply -f profile.yaml
 ```
+
+describe the profile
+
+```shell
+kubectl describe profile custom-user-example-com
+```
+
+delete the profile
+
+```shell
+kubectl delete profile custom-user-example-com
+```
