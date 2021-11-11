@@ -6,7 +6,7 @@ outputs:
 
 implementation:
   container:
-    image: sample-metrics:latest
+    image: sample-show-metrics:latest
     command: [
       python,
       main.py,
