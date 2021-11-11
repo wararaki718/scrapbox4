@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-11T23:11:09.156794',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-11T23:21:10.177531',
     pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
 spec:
@@ -12,7 +12,7 @@ spec:
     container:
       args: []
       command: [python, main.py, --metricspath, /tmp/outputs/metrics_path/data]
-      image: sample-metrics:latest
+      image: sample-show-metrics:latest
       imagePullPolicy: Never
     outputs:
       artifacts:
@@ -24,10 +24,10 @@ spec:
         pipelines.kubeflow.org/enable_caching: "true"
       annotations: {pipelines.kubeflow.org/component_spec: '{"description": "evaluation",
           "implementation": {"container": {"command": ["python", "main.py", "--metricspath",
-          {"outputPath": "metrics_path"}], "image": "sample-metrics:latest"}}, "name":
-          "evaluator", "outputs": [{"description": "show metrics", "name": "metrics_path",
-          "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
-          "966a0358afb56428216a265c2d8272e3eacaf16058d1fa5cf96c778e1ff12822", "url":
+          {"outputPath": "metrics_path"}], "image": "sample-show-metrics:latest"}},
+          "name": "evaluator", "outputs": [{"description": "show metrics", "name":
+          "metrics_path", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "820d8995340d312a08383b486edfeb4b781a3f9d11fc4d772a8d23cca822adf3", "url":
           "components/evaluator/component.yaml"}'}
   - name: pipeline
     dag:
