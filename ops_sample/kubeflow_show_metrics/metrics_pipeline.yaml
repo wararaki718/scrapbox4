@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-11T23:11:09.156794',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
+spec:
+  entrypoint: pipeline
+  templates:
+  - name: evaluator
+    container:
+      args: []
+      command: [python, main.py, --metricspath, /tmp/outputs/metrics_path/data]
+      image: sample-metrics:latest
+      imagePullPolicy: Never
+    outputs:
+      artifacts:
+      - {name: evaluator-metrics_path, path: /tmp/outputs/metrics_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "evaluation",
+          "implementation": {"container": {"command": ["python", "main.py", "--metricspath",
+          {"outputPath": "metrics_path"}], "image": "sample-metrics:latest"}}, "name":
+          "evaluator", "outputs": [{"description": "show metrics", "name": "metrics_path",
+          "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "966a0358afb56428216a265c2d8272e3eacaf16058d1fa5cf96c778e1ff12822", "url":
+          "components/evaluator/component.yaml"}'}
+  - name: pipeline
+    dag:
+      tasks:
+      - {name: evaluator, template: evaluator}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
