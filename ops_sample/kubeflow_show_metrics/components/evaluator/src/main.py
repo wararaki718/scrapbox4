@@ -30,5 +30,8 @@ def main():
     if not parser.metricspath.parents[0].exists():
         parser.metricspath.parents[0].mkdir(parents=True)
 
-    with open(parser.metricspath, "w") as f:
-        json.dump(metrics, f)
+    parser.metricspath.write_text(json.dumps(metrics))
+
+
+if __name__ == "__main__":
+    main()

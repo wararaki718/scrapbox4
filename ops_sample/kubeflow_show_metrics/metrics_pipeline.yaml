@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-11T23:21:10.177531',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-12T23:26:49.332534',
     pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
 spec:
@@ -26,8 +26,8 @@ spec:
           "implementation": {"container": {"command": ["python", "main.py", "--metricspath",
           {"outputPath": "metrics_path"}], "image": "sample-show-metrics:latest"}},
           "name": "evaluator", "outputs": [{"description": "show metrics", "name":
-          "metrics_path", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
-          "820d8995340d312a08383b486edfeb4b781a3f9d11fc4d772a8d23cca822adf3", "url":
+          "metrics_path", "type": "Metrics"}]}', pipelines.kubeflow.org/component_ref: '{"digest":
+          "3709be5fd17424751fd88abc12accd717466c890c925d72e8f50e15779caef31", "url":
           "components/evaluator/component.yaml"}'}
   - name: pipeline
     dag:

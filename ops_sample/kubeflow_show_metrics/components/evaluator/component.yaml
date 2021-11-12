@@ -2,7 +2,7 @@ name: evaluator
 description: evaluation
 
 outputs:
-  - { name: metrics_path, type: String, description: "show metrics" }
+  - { name: metrics_path, type: Metrics, description: "show metrics" }
 
 implementation:
   container:
