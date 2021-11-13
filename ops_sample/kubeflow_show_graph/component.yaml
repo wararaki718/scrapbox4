@@ -1,0 +1,17 @@
+name: confusion matrix
+description: confusion matrix
+
+outputs:
+  - { name: graph_path, type: UI metadata }
+
+implementation:
+  container:
+    image: sample-confusion-matrix:latest
+    command: [
+      python,
+      main.py
+    ]
+    args: [
+      --graphpath,
+      { outputPath: graph_path }
+    ]

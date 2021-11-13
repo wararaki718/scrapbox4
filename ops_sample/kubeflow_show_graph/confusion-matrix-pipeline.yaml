@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-13T18:55:49.873467',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
+spec:
+  entrypoint: pipeline
+  templates:
+  - name: confusion-matrix
+    container:
+      args: [--graphpath, /tmp/outputs/graph_path/data]
+      command: [python, main.py]
+      image: sample-confusion-matrix:latest
+    outputs:
+      artifacts:
+      - {name: confusion-matrix-graph_path, path: /tmp/outputs/graph_path/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.7
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"description": "confusion
+          matrix", "implementation": {"container": {"args": ["--graphpath", {"outputPath":
+          "graph_path"}], "command": ["python", "main.py"], "image": "sample-confusion-matrix:latest"}},
+          "name": "confusion matrix", "outputs": [{"name": "graph_path", "type": "UI
+          metadata"}]}', pipelines.kubeflow.org/component_ref: '{"digest": "ca064f130d9a8a2598026af3c64757b634860387336f65f78ba93f76db4620e5",
+          "url": "component.yaml"}'}
+  - name: pipeline
+    dag:
+      tasks:
+      - {name: confusion-matrix, template: confusion-matrix}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
