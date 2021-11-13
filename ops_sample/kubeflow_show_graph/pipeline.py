@@ -5,7 +5,7 @@ _matrix_op = kfp.components.load_component_from_file(
 )
 
 def pipeline():
-    matrix_op = _matrix_op()
+    matrix_op = (_matrix_op().set_image_pull_policy("Never"))
 
 
 if __name__ == "__main__":

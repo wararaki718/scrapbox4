@@ -20,13 +20,13 @@ def main():
     iris = load_iris()
     X = iris.data
     y = iris.target
-    labels = iris.target_names
+    labels = iris.target_names.tolist()
 
     model = LogisticRegression()
     model.fit(X, y)
 
     y_pred = model.predict(X)
-    result = confusion_matrix(y, y_pred, labels=labels)
+    result = confusion_matrix(y, y_pred)
     data = []
     for target_index, row in enumerate(result):
         for predict_index, value in enumerate(row):
@@ -38,11 +38,11 @@ def main():
         "outputs": [{
             "type": "confusion_matrix",
             "format": "csv",
-            "schema": [{
+            "schema": [
                 {"name": "target", "type": "CATEGORY"},
                 {"name": "predicted", "type": "CATEGORY"},
                 {"name": "count", "type": "NUMBER"}
-            }],
+            ],
             "source": source,
             "storage": "inline",
             "labels": labels

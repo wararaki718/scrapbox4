@@ -6,7 +6,7 @@ outputs:
 
 implementation:
   container:
-    image: sample-confusion-matrix:latest
+    image: confusion-matrix-sample:latest
     command: [
       python,
       main.py
