@@ -11,9 +11,3 @@ docker-compose build
 ```shell
 docker-compose up
 ```
-
-## test
-
-```shell
-docker-compose up
-```
