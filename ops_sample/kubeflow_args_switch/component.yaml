@@ -1,0 +1,17 @@
+name: sample-args-program
+description: use args
+
+inputs:
+  - { name: sample_flag, type: String, default: "test"}
+
+implementation:
+  container:
+    image: sample-args-switch:latest
+    command: [
+      python,
+      main.py
+    ]
+    args: [
+      --flag,
+      { inputValue: sample_flag }
+    ]
