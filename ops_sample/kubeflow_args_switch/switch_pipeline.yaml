@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-15T20:24:44.358471',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7, pipelines.kubeflow.org/pipeline_compilation_time: '2021-11-15T21:21:51.089872',
     pipelines.kubeflow.org/pipeline_spec: '{"name": "Pipeline"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.7}
 spec:
@@ -34,7 +34,7 @@ spec:
           "test"}'}
   - name: sample-args-program-2
     container:
-      args: [--flag, test]
+      args: [--flag, sample]
       command: [python, main.py]
       image: sample-args-switch:latest
       imagePullPolicy: Never
@@ -50,7 +50,7 @@ spec:
           "name": "sample-args-program"}', pipelines.kubeflow.org/component_ref: '{"digest":
           "95d0cad553adfd921dee70f0cbd8d98d74c714ff3317fb85479054d75a586be2", "url":
           "component.yaml"}', pipelines.kubeflow.org/arguments.parameters: '{"sample_flag":
-          "test"}'}
+          "sample"}'}
   arguments:
     parameters: []
   serviceAccountName: pipeline-runner
