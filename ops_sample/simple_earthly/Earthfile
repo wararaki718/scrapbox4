@@ -1,0 +1,11 @@
+FROM python:3.8
+WORKDIR /opt/app
+
+build:
+    COPY src /opt/app
+    SAVE ARTIFACT /opt/app app
+
+docker:
+    COPY +build/app /opt/app
+    ENTRYPOINT [ "python", "main.py" ]
+    SAVE IMAGE simple-earthly:latest
