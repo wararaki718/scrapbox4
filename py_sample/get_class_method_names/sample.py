@@ -10,3 +10,6 @@ class Sample:
     
     def _private1(self):
         print("call private1")
+
+    def hello(self):
+        print("hello")
