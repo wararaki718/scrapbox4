@@ -17,7 +17,7 @@ def main():
         "i have something in this box. こんにちわ"
     ]
     for sentence in sentences:
-        results = detector.FindTopNMostFreqLangs(text=sentence, num_langs=2)
+        results = detector.FindTopNMostFreqLangs(text=sentence, num_langs=5)
         show_result(sentence, results)
     print("DONE")
 
