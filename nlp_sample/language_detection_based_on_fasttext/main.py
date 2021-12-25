@@ -10,7 +10,7 @@ def main():
         "je mange de la nourriture",
         "hello world",
         "こんにちわ",
-        "hello こんにちわ"
+        "i have something in this box. こんにちわ"
     ]
 
     labels, _ = model.predict(sentences)
