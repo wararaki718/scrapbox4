@@ -12,7 +12,7 @@ def main():
     print()
     
     # scipy sparse matrix
-    sp = sps.csr_matrix([[1, 0, 1], [0, 2, 0]])
+    sp = sps.csr_matrix([[1, 0, 1], [0, 2, 0], [3, 3, 0], [0, 0, 4], [0, 5, 5]])
     print(sp)
     print(sp.todense())
     print()
@@ -22,6 +22,9 @@ def main():
     s = torch.sparse_coo_tensor([s.row, s.col], s.data, s.shape)
     print(s)
     print(s.to_dense())
+    print()
+
+    print(sp[0:2].todense())
     print()
 
     if torch.cuda.is_available():
