@@ -1,4 +1,3 @@
-from itertools import count
 from tempfile import NamedTemporaryFile
 
 import pandas as pd
