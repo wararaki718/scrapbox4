@@ -3,7 +3,7 @@
  ## setup environment
 
  ```shell
- pip install implicit
+ pip install lightfm scipy pandas numpy
  ```
 
  ## run
