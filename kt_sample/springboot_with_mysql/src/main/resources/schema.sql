@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS Customer;
-CREATE TABLE Customer (id SERIAL PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255));
+DROP TABLE IF EXISTS customer;
+CREATE TABLE customer (id SERIAL PRIMARY KEY, first_name VARCHAR(255), last_name VARCHAR(255));
