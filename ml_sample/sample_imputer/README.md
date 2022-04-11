@@ -3,7 +3,7 @@
 ## setup
 
 ```shell
-pip install scikit-learn seaborn
+pip install scikit-learn seaborn pandas numpy
 ```
 
 ## run
