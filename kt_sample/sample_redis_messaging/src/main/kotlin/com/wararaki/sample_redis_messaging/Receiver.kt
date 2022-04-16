@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 class Receiver {
     companion object {
         val LOGGER: Logger = LoggerFactory.getLogger(this::class.java.enclosingClass)
-        val counter: AtomicInteger = new AtomicInteger(0)
+        val counter: AtomicInteger = AtomicInteger(0)
     }
 
     fun receiveMessage(message: String) {
@@ -16,7 +16,7 @@ class Receiver {
         counter.incrementAndGet()
     }
 
-    fun getCount(): int {
+    fun getCount(): Int {
         return counter.get()
     }
 }

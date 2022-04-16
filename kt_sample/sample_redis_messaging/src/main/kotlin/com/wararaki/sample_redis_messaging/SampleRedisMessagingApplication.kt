@@ -13,35 +13,41 @@ import org.springframework.data.redis.listener.PatternTopic
 
 @SpringBootApplication
 class SampleRedisMessagingApplication {
-	companion object {
-		val LOGGER: Logger = LoggerFactory.getLogger(this::class.java.enclosingClass)
-	}
-
 	@Bean
 	fun container(connectionFactory: RedisConnectionFactory, listenerAdapter: MessageListenerAdapter): RedisMessageListenerContainer {
 		val container = RedisMessageListenerContainer()
+		val chat = PatternTopic("chat")
 		container.setConnectionFactory(connectionFactory)
-		container.addMessageListener(listenerAdapter, new PatternTopic("chat"))
+		container.addMessageListener(listenerAdapter, chat)
+
 		return container
 	}
 
 	@Bean
 	fun listenerAdapter(receiver: Receiver): MessageListenerAdapter {
-		val adapter = new MessageListenerAdapter(receiver, "receiveMessage")
+		return MessageListenerAdapter(receiver, "receiveMessage")
 	}
 
 	@Bean
 	fun receiver(): Receiver {
-		return new Receiver()
+		return Receiver()
 	}
 
 	@Bean
 	fun template(connectionFactory: RedisConnectionFactory): StringRedisTemplate {
-		return new StringRedisTemplate(connectionFactory)
+		return StringRedisTemplate(connectionFactory)
 	}
 }
 
 fun main(args: Array<String>) {
-	runApplication<SampleRedisMessagingApplication>(*args)
-	val template: StringRedisTemplate
+	val logger: Logger = LoggerFactory.getLogger("main")
+	val context = runApplication<SampleRedisMessagingApplication>(*args)
+	val template: StringRedisTemplate = context.getBean(StringRedisTemplate::class.java)
+	val receiver: Receiver = context.getBean(Receiver::class.java)
+
+	while (receiver.getCount() == 0) {
+		logger.info("Sending message...")
+		template.convertAndSend("chat", "hello from redis!")
+		Thread.sleep(500L)
+	}
 }
