@@ -30,7 +30,7 @@ class FakeMessageService: MessageService {
         }.toList()
     }
 
-    override fun after(messageId: String): List<MessageViewModel> {
+    override fun after(lastMessageId: String): List<MessageViewModel> {
         return latest()
     }
 
