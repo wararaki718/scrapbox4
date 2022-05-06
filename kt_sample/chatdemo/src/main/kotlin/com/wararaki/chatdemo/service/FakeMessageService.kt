@@ -20,7 +20,7 @@ class FakeMessageService: MessageService {
         "Yoda" to { Faker.instance().rickAndMorty().quote() }
     )
 
-    override fun latest(): List<MessageViewModel> {
+    override suspend fun latest(): List<MessageViewModel> {
         val count = Random.nextInt(1, 15)
         return (0..count).map {
             val user = users.values.random()
@@ -30,11 +30,11 @@ class FakeMessageService: MessageService {
         }.toList()
     }
 
-    override fun after(lastMessageId: String): List<MessageViewModel> {
+    override suspend fun after(lastMessageId: String): List<MessageViewModel> {
         return latest()
     }
 
-    override fun post(message: MessageViewModel) {
+    override suspend fun post(message: MessageViewModel) {
         TODO("Not yet implemented")
     }
 }

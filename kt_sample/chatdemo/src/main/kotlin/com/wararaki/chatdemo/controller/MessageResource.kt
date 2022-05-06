@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/messages")
 class MessageResource (val messageService: MessageService){
     @GetMapping
-    fun latest(@RequestParam(value="lastMessageId", defaultValue = "") lastMessageId: String): ResponseEntity<List<MessageViewModel>> {
+    suspend fun latest(@RequestParam(value="lastMessageId", defaultValue = "") lastMessageId: String): ResponseEntity<List<MessageViewModel>> {
         val messages = if (lastMessageId.isNotEmpty()) {
             messageService.after(lastMessageId)
         } else {
@@ -30,7 +30,7 @@ class MessageResource (val messageService: MessageService){
     }
 
     @PostMapping
-    fun post(@RequestBody message: MessageViewModel) {
+    suspend fun post(@RequestBody message: MessageViewModel) {
         messageService.post(message)
     }
 }

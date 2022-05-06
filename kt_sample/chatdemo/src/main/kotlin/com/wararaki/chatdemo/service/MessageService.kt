@@ -1,9 +1,9 @@
 package com.wararaki.chatdemo.service
 
 interface MessageService {
-    fun latest(): List<MessageViewModel>
+    suspend fun latest(): List<MessageViewModel>
 
-    fun after(lastMessageId: String): List<MessageViewModel>
+    suspend fun after(lastMessageId: String): List<MessageViewModel>
 
-    fun post(message: MessageViewModel)
+    suspend fun post(message: MessageViewModel)
 }
