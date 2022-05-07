@@ -1,6 +1,7 @@
 package com.wararaki.chatdemo.repository
 
 import com.wararaki.chatdemo.Model.Message
+import kotlinx.coroutines.flow.Flow
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.data.repository.query.Param
@@ -13,7 +14,7 @@ interface MessageRepository: CoroutineCrudRepository<Message, String> {
             LIMIT 10
         ) ORDER BY "SENT"
     """)
-    suspend fun findLatest(): List<Message>
+    fun findLatest(): Flow<Message>
 
     @Query("""
         SELECT * FROM (
@@ -22,5 +23,5 @@ interface MessageRepository: CoroutineCrudRepository<Message, String> {
             ORDER BY "SENT" DESC
         ) ORDER BY "SENT"
     """)
-    suspend fun findLatest(@Param("id") id: String): List<Message>
+    fun findLatest(@Param("id") id: String): Flow<Message>
 }

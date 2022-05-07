@@ -1,9 +1,13 @@
 package com.wararaki.chatdemo.service
 
+import kotlinx.coroutines.flow.Flow
+
 interface MessageService {
-    suspend fun latest(): List<MessageViewModel>
+    fun latest(): Flow<MessageViewModel>
 
-    suspend fun after(lastMessageId: String): List<MessageViewModel>
+    fun after(lastMessageId: String): Flow<MessageViewModel>
 
-    suspend fun post(message: MessageViewModel)
+    fun stream(): Flow<MessageViewModel>
+
+    suspend fun post(messages: Flow<MessageViewModel>)
 }
