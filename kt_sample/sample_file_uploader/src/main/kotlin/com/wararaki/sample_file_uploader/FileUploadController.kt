@@ -1,6 +1,5 @@
 package com.wararaki.sample_file_uploader
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -13,10 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.stream.Collectors
 
 @Controller
-class FileUploadController(storageService: StorageService) {
-    @Autowired
-    private final val storageService: StorageService = storageService
-
+class FileUploadController(val storageService: StorageService) {
     @GetMapping("/")
     fun listUploadedFiles(model: Model): String {
         model.addAttribute("files", storageService.loadAll().map { path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController::class.java, "serveFile", path.fileName.toString()).build().toUri().toString() }.collect(Collectors.toList()))
@@ -34,7 +30,7 @@ class FileUploadController(storageService: StorageService) {
     fun handleFileUpload(@RequestParam("file") file: MultipartFile, redirectAttributes: RedirectAttributes): String {
         storageService.store(file)
         redirectAttributes.addFlashAttribute("message", "You successfully uploaded %s !".format(file.originalFilename))
-        return "redirect/"
+        return "redirect:/"
     }
 
     @ExceptionHandler(StorageFileNotFoundException::class)
