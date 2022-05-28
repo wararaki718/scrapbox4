@@ -1,0 +1,1 @@
+rootProject.name = "com.wararaki.ktor_sample_chat"
