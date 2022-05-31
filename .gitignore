@@ -221,3 +221,5 @@ data/
 
 # Java serializable file
 *.ser
+
+.terraform
