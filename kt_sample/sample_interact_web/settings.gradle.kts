@@ -1,0 +1,1 @@
+rootProject.name = "com.wararaki.sample_interact_web"
