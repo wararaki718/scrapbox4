@@ -17,4 +17,5 @@ def binary_file(tmp_path: LocalPath) -> Path:
 
 def test_load_binary(binary_file: Path):
     df = load_binary(binary_file)
-    assert df.equals(pd.DataFrame([[1, 2], [3, 4]], columns=["a", "b"]))
+    expected_df = pd.DataFrame([[1, 2], [3, 4]], columns=["a", "b"])
+    assert df.equals(expected_df)
