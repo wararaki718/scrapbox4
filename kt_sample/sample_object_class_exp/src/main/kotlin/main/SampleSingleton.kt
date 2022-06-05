@@ -1,3 +1,5 @@
+package main
+
 // object declarations
 object SampleSingleton{
     fun get(): String {

@@ -1,3 +1,5 @@
+package main
+
 // companion object
 class SampleCompanionObject {
     companion object {
