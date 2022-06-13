@@ -1,0 +1,7 @@
+version: "3"
+services:
+  app:
+    image: uvicorn-app:latest
+    entrypoint: "python batch/main.py"
+    volumes:
+      - ./models:/opt/app/batch/models
