@@ -1,0 +1,7 @@
+version: "3"
+services:
+  app:
+    image: sample-kt-web:latest
+    build: .
+    ports:
+      - 8080:8080
