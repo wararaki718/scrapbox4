@@ -35,3 +35,30 @@ someFunc = do
 
     let result9 = firstLetter ""
     print result9
+
+    let result10 = bmiTell 10
+    print result10
+
+    let result11 = bmiTell 20
+    print result11
+
+    let result12 = bmiTell' 85 1.90
+    print result12
+
+    let result13 = bmiTell2 85 1.90
+    print result13
+
+    let result14 = bmiTell2' 85 1.20
+    print result14
+
+    let result15 = calcBmis [(40, 1.20), (100, 1.50)]
+    print result15
+
+    let result16 = cylinder 5 2
+    print result16
+
+    let result17 = calcBmis' [(40, 1.20), (100, 1.50)]
+    print result17
+
+    let result18 = head'' [100, 20, 130, 90]
+    print result18

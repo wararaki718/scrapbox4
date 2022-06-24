@@ -29,3 +29,53 @@ head' (x:_) = x
 firstLetter :: String -> String
 firstLetter "" = "Empty string, whoops!"
 firstLetter all@(x:xs) = "The first letter"
+
+bmiTell :: Double -> String
+bmiTell bmi
+    | bmi <= 18.5 = "underweight"
+    | bmi <= 25.0 = "normal"
+    | bmi <= 30.0 = "overweight"
+    | otherwise   = "over!"
+
+bmiTell' :: Double -> Double -> String
+bmiTell' weight height
+    | weight / height ^ 2 <= 18.5 = "underweight"
+    | weight / height ^ 2 <= 25.0 = "normal"
+    | weight / height ^ 2 <= 30.0 = "overweight"
+    | otherwise   = "over!"
+
+bmiTell2 :: Double -> Double -> String
+bmiTell2 weight height
+    | bmi <= 18.5 = "underweight"
+    | bmi <= 25.0 = "normal"
+    | bmi <= 30.0 = "overweight"
+    | otherwise   = "over!"
+    where bmi = weight / height ^ 2
+
+bmiTell2' :: Double -> Double -> String
+bmiTell2' weight height
+    | bmi <= skinny = "underweight"
+    | bmi <= normal = "normal"
+    | bmi <= fat = "overweight"
+    | otherwise   = "over!"
+    where bmi = weight / height ^ 2
+          skinny = 18.5
+          normal = 25.0
+          fat = 30.0
+
+calcBmis :: [(Double, Double)] -> [Double]
+calcBmis xs = [bmi w h | (w, h) <- xs]
+    where bmi weight height = weight / height ^ 2
+
+cylinder :: Double -> Double -> Double
+cylinder r h =
+    let sideArea = 2 * pi * r * h
+        topArea = pi * r ^ 2
+    in sideArea + 2 * topArea
+
+calcBmis' :: [(Double, Double)] -> [Double]
+calcBmis' xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2]
+
+head'' :: [a] -> a
+head'' xs = case xs of [] -> error "empty"
+                       (x:_) -> x
