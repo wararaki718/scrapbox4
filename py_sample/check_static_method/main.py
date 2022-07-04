@@ -1,3 +1,6 @@
+import inspect
+
+
 class Base:
     def instance_method(self):
         print("instancemethod")
@@ -17,6 +20,7 @@ class Base2(Base):
         #super().static_method() // error
         print("staticmethod2")
 
+
 def main():
     #Base.instance_method() // error
     Base.static_method()
@@ -29,6 +33,11 @@ def main():
     base2 = Base2()
     base2.instance_method()
     base2.static_method()
+    print()
+
+    for name in inspect.getmembers(base, inspect.ismethod):
+        print(name)
+    print()
 
     print("DONE")
 
