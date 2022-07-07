@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/initdb:/docker-entrypoint-initdb.d
+    networks:
+      - spynet
+  spy:
+    image: schemaspy/schemaspy:6.1.0
+    volumes:
+      - ./db/schemaspy/html:/output
+      - ./db/schemaspy/schemaspy.properties:/schemaspy.properties
+    networks:
+      - spynet
+    depends_on:
+      - db
+
+networks:
+  spynet:
