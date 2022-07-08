@@ -12,10 +12,11 @@ services:
     networks:
       - spynet
   spy:
-    image: schemaspy/schemaspy:6.1.0
+    build: ./db/schemaspy
+    image: custom_schemaspy:6.1.0
     volumes:
       - ./db/schemaspy/html:/output
-      - ./db/schemaspy/schemaspy.properties:/schemaspy.properties
+      - ./db/schemaspy/schemaspy.properties:/app/schemaspy.properties:ro
     networks:
       - spynet
     depends_on:
