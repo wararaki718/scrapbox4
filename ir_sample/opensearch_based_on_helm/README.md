@@ -32,6 +32,8 @@ if the dashboard is running, you execute the below shell. if not, wait a minute.
 bash forward.sh
 ```
 
+after that, you accesss to http://127.0.0.1:8080/ on your browser.
+
 ## uninstall chart
 
 ```shell
